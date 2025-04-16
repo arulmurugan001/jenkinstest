@@ -3,7 +3,7 @@
     environment {
         TOMCAT_USER = 'admin'
         TOMCAT_PASS = 'admin'
-        TOMCAT_URL = 'http://54.219.93.233:9090/manager/status'
+        TOMCAT_URL = 'http://13.52.220.233:9090/manager/html'
     }
 
     tools {
