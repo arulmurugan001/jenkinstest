@@ -1,17 +1,8 @@
- pipeline {
-     agent any
-    environment {
-        TOMCAT_USER = 'admin'
-        TOMCAT_PASS = 'admin'
-        TOMCAT_URL = 'http://13.52.220.233:9090/manager/html'
-    }
+pipeline {
+agent any
 
-    tools {
-        maven 'Maven' // Use your Maven name from Jenkins config
-    }
-
-    stages {
-        stage('Clone Repo') {
+stages {
+stage('Clone Repo') {
             steps {
                 git credentialsId: 'github-creds',
                     url: 'https://github.com/arulmurugan001/jenkinstest.git',
@@ -19,21 +10,23 @@
             }
         }
 
-        stage('Build WAR') {
-            steps {
-                sh 'mvn clean package'
-            }
-        }
+stage(‘Build’) {
+steps {
+sh ‘mvn clean package’
+}
+}
 
-        stage('Deploy WAR to Tomcat') {
-            steps {
-                script {
-                    def warFile = 'target/02-Maven-WebApp.war' // replace with your actual WAR file
-                    sh """
-                        curl -u $TOMCAT_USER:$TOMCAT_PASS -T $warFile "$TOMCAT_URL/deploy?path=/02-Maven-WebApp&update=true"
-                    """
-                }
-            }
-        }
-    }
+stage(‘Deploy’) {
+environment {
+TOMCAT_URL = ‘http://54.193.90.100:9090'
+TOMCAT_USER = ‘admin’
+TOMCAT_PASSWORD = ‘admin’
+CONTEXT_PATH = ‘/myapp’
+}
+
+steps{
+sh “curl — upload-file target/02-Maven-WebApp.war ${TOMCAT_URL}/manager/html/deploy?path=${CONTEXT_PATH} -u ${TOMCAT_USER}:${TOMCAT_PASSWORD}”
+}
+}
+}
 }
